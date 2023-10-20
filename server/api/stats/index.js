@@ -11,10 +11,10 @@ const updateStats = async () => {
         const ids = {};
 
         // Add github id if available
-        if (project.repository && project.repository.includes('github.com')) { 
-            ids['github'] = project.repository.replace('https://github.com/', ''); 
+        if (project.repository && project.repository.match(/github\.com/)) {
+            ids['github'] = project.repository.replace('https://github.com/', '');
         }
-    
+
         // Filter by allowed platforms
         if (project.ids) {
             platforms.forEach(platform => {
@@ -23,7 +23,7 @@ const updateStats = async () => {
                 }
             });
         }
-    
+
         stats[project.id] = await mineget.get(ids)
             .catch(e => {
                 console.log(e);
@@ -45,7 +45,7 @@ export default defineEventHandler(async () => {
     if (Date.now() - timestamp < 3600000) {
         return stats;
     }
-    
+
     updateStats();
     return stats;
 });

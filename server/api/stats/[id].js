@@ -10,8 +10,8 @@ const updateStats = async (project) => {
     const ids = {};
 
     // Add github id if available
-    if (project.repository && project.repository.includes('github.com')) { 
-        ids['github'] = project.repository.replace('https://github.com/', ''); 
+    if (project.repository && project.repository.match(/github\.com/)) {
+        ids['github'] = project.repository.replace('https://github.com/', '');
     }
 
     // Filter by allowed platforms
@@ -45,7 +45,8 @@ export default defineEventHandler(async (event) => {
     }
 
     // Cache stats for an hour
-    if (!Object.keys(stats).includes(project.id)) {
+    if (Object.keys(stats).includes(project.id) === false) {
+        console.log(project)
         await updateStats(project);
     }
     if (Date.now() - timestamp < 3600000) {
